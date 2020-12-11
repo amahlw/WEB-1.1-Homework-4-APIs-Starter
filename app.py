@@ -58,17 +58,19 @@ def results():
         # TODO: Enter query parameters here for the 'appid' (your api key),
         # the city, and the units (metric or imperial).
         # See the documentation here: https://openweathermap.org/current
+
         'appid': API_KEY,
 
-        'q': city
+        'q': city,
+        'units': units
 
 
     }
 
-    result_json = requests.get(url, params=params).json()
+    results = requests.get(url, params=params).json
 
     # Uncomment the line below to see the results of the API call!
-    pp.pprint(result_json)
+    pp.pprint(results)
 
     # TODO: Replace the empty variables below with their appropriate values.
     # You'll need to retrieve these from the result_json object above.
@@ -77,16 +79,16 @@ def results():
     # datetime objects. You can do so using the `datetime.fromtimestamp()`
     # function.
 
-    sunrise = datetime.fromtimestamp(result_json['sys']['sunrise'])
-    sunset = datetime.fromtimestamp(result_json['sys']['sunset'])
+    sunrise = datetime.fromtimestamp(results['sys']['sunrise'])
+    sunset = datetime.fromtimestamp(results['sys']['sunset'])
 
     context = {
         'date': datetime.now(),
         'city': city,
-        'description': result_json['weather'][0]['description'],
-        'temp': result_json['main']['temp'],
-        'humidity': result_json['main']['humidity'],
-        'wind_speed': result_json['wind']['speed'],
+        'description': results['weather'][0]['description'],
+        'temp': results['main']['temp'],
+        'humidity': results['main']['humidity'],
+        'wind_speed': results['wind']['speed'],
         'sunrise': sunrise,
         'sunset': sunset,
         'units_letter': get_letter_for_units(units)
@@ -168,15 +170,21 @@ def historical_results():
 
     # TODO: Replace the empty variables below with their appropriate values.
     # You'll need to retrieve these from the 'result_current' object above.
+
+    city = result_current["name"]
+    description = result_current['weather'][0]['description']
+    temp = result_current['main']['temp']
+
     context = {
         'city': city,
         'date': date_obj,
         'lat': latitude,
         'lon': longitude,
         'units': units,
-        'units_letter': units_letter,  # should be 'C', 'F', or 'K'
-        'description': result_json['current']['weather'][0]['description'],
-        'temp': result_json['current']['temp'],
+        # should be 'C', 'F', or 'K'
+        'units_letter': get_letter_for_units(units),
+        'description': description,
+        'temp': temp,
         'min_temp': get_min_temp(result_hourly),
         'max_temp': get_max_temp(result_hourly)
     }
